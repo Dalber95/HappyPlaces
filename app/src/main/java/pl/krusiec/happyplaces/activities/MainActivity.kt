@@ -1,9 +1,10 @@
-package pl.krusiec.happyplaces
+package pl.krusiec.happyplaces.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
+import pl.krusiec.happyplaces.R
 
 class MainActivity : AppCompatActivity() {
 

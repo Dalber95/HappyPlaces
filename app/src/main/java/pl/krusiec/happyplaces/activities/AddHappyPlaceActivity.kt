@@ -1,4 +1,4 @@
-package pl.krusiec.happyplaces
+package pl.krusiec.happyplaces.activities
 
 import android.Manifest
 import android.app.Activity
@@ -23,6 +23,7 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import kotlinx.android.synthetic.main.activity_add_happy_place.*
+import pl.krusiec.happyplaces.R
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -34,6 +35,9 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
 
     private var cal = Calendar.getInstance()
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
+    private var saveImageToInternalStorage: Uri? = null
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +57,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
         }
         et_date.setOnClickListener(this)
         tv_add_image.setOnClickListener(this)
+        btn_save.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -81,6 +86,10 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 pictureDialog.show()
             }
+
+            R.id.btn_save -> {
+
+            }
         }
     }
 
@@ -91,8 +100,9 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                 if (data != null) {
                     val contentURI = data.data
                     try {
-                        val selectedImageBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
-                        val saveImageToInternalStorage = saveImageToInternalStorage(selectedImageBitmap)
+                        val selectedImageBitmap =
+                            MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
+                        saveImageToInternalStorage = saveImageToInternalStorage(selectedImageBitmap)
                         Log.i("Saved image: ", "Path :: $saveImageToInternalStorage")
                         iv_place_image.setImageBitmap(selectedImageBitmap)
                     } catch (e: IOException) {
@@ -106,7 +116,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                 }
             } else if (requestCode == CAMERA) {
                 val thumbnail: Bitmap = data!!.extras!!.get("data") as Bitmap
-                val saveImageToInternalStorage = saveImageToInternalStorage(thumbnail)
+                saveImageToInternalStorage = saveImageToInternalStorage(thumbnail)
                 Log.i("Saved image: ", "Path :: $saveImageToInternalStorage")
                 iv_place_image.setImageBitmap(thumbnail)
             }
@@ -122,7 +132,10 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
             override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
                 if (report!!.areAllPermissionsGranted()) {
                     val galleryIntent = Intent(Intent(MediaStore.ACTION_IMAGE_CAPTURE))
-                    startActivityForResult(galleryIntent, CAMERA)
+                    startActivityForResult(
+                        galleryIntent,
+                        CAMERA
+                    )
                 }
             }
 
@@ -144,7 +157,10 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                 if (report!!.areAllPermissionsGranted()) {
                     val galleryIntent =
                         Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                    startActivityForResult(galleryIntent, GALLERY)
+                    startActivityForResult(
+                        galleryIntent,
+                        GALLERY
+                    )
                 }
             }
 
