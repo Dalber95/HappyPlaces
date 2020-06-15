@@ -23,6 +23,7 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import kotlinx.android.synthetic.main.activity_add_happy_place.*
+import kotlinx.android.synthetic.main.activity_happy_place_detail.*
 import pl.krusiec.happyplaces.R
 import pl.krusiec.happyplaces.database.DatabaseHandler
 import pl.krusiec.happyplaces.models.HappyPlaceModel
@@ -41,6 +42,8 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
 
+    private var happyPlaceDetails: HappyPlaceModel? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_happy_place)
@@ -51,6 +54,10 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
             onBackPressed()
         }
 
+        if (intent.hasExtra(MainActivity.EXTRA_PLACE_DETAILS)) {
+            happyPlaceDetails = intent.getParcelableExtra(MainActivity.EXTRA_PLACE_DETAILS) as HappyPlaceModel
+        }
+
         dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
             cal.set(Calendar.YEAR, year)
             cal.set(Calendar.MONTH, month)
@@ -58,6 +65,22 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
             updateDateInView()
         }
         updateDateInView()
+
+        if (happyPlaceDetails != null){
+            supportActionBar?.title = "Edit Happy Place"
+
+            et_title.setText(happyPlaceDetails!!.title)
+            et_description.setText(happyPlaceDetails!!.description)
+            et_date.setText(happyPlaceDetails!!.date)
+            et_location.setText(happyPlaceDetails!!.location)
+            latitude = happyPlaceDetails!!.latitude
+            longitude = happyPlaceDetails!!.longitude
+
+            saveImageToInternalStorage = Uri.parse(happyPlaceDetails!!.image)
+            iv_place_image.setImageURI(saveImageToInternalStorage)
+            btn_save.text = "UPDATE"
+        }
+
         et_date.setOnClickListener(this)
         tv_add_image.setOnClickListener(this)
         btn_save.setOnClickListener(this)

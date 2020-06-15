@@ -1,6 +1,8 @@
 package pl.krusiec.happyplaces.adapters
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_happy_place.view.*
 import pl.krusiec.happyplaces.R
+import pl.krusiec.happyplaces.activities.AddHappyPlaceActivity
+import pl.krusiec.happyplaces.activities.MainActivity
 import pl.krusiec.happyplaces.models.HappyPlaceModel
 
 class HappyPlacesAdapter(
@@ -36,14 +40,21 @@ class HappyPlacesAdapter(
             holder.itemView.tvDescription.text = model.description
 
             holder.itemView.setOnClickListener {
-                if (onClickListener != null){
+                if (onClickListener != null) {
                     onClickListener!!.onClick(position, model)
                 }
             }
         }
     }
 
-    fun setOnClickListener(onClickListener: OnClickListener){
+    fun notifyEditItem(activity: Activity, position: Int, requestCode: Int) {
+        val intent = Intent(context, AddHappyPlaceActivity::class.java)
+        intent.putExtra(MainActivity.EXTRA_PLACE_DETAILS, list[position])
+        activity.startActivityForResult(intent, requestCode)
+        notifyItemChanged(position)
+    }
+
+    fun setOnClickListener(onClickListener: OnClickListener) {
         this.onClickListener = onClickListener
     }
 
