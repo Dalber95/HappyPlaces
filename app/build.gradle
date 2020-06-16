@@ -33,7 +33,7 @@ dependencies {
     implementation 'com.karumi:dexter:6.0.1'
     implementation 'de.hdodenhof:circleimageview:3.0.1'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'com.google.android.libraries.places:places:2.3.0'
+    implementation 'com.google.android.libraries.places:places:2.2.0'
 
     debugImplementation 'im.dino:dbinspector:3.4.1@aar'
     testImplementation 'junit:junit:4.12'
