@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.item_happy_place.view.*
 import pl.krusiec.happyplaces.R
 import pl.krusiec.happyplaces.activities.AddHappyPlaceActivity
 import pl.krusiec.happyplaces.activities.MainActivity
+import pl.krusiec.happyplaces.database.DatabaseHandler
 import pl.krusiec.happyplaces.models.HappyPlaceModel
 
 class HappyPlacesAdapter(
@@ -44,6 +45,15 @@ class HappyPlacesAdapter(
                     onClickListener!!.onClick(position, model)
                 }
             }
+        }
+    }
+
+    fun removeAt(position: Int){
+        val dbHandler = DatabaseHandler(context)
+        val isDeleted = dbHandler.deleteHappyPlace(list[position])
+        if (isDeleted > 0) {
+            list.removeAt(position)
+            notifyItemRemoved(position)
         }
     }
 

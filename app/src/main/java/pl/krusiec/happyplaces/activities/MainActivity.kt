@@ -14,6 +14,7 @@ import pl.krusiec.happyplaces.R
 import pl.krusiec.happyplaces.adapters.HappyPlacesAdapter
 import pl.krusiec.happyplaces.database.DatabaseHandler
 import pl.krusiec.happyplaces.models.HappyPlaceModel
+import pl.krusiec.happyplaces.utils.SwipeToDeleteCallback
 import pl.krusiec.happyplaces.utils.SwipeToEditCallback
 
 class MainActivity : AppCompatActivity() {
@@ -54,6 +55,17 @@ class MainActivity : AppCompatActivity() {
 
         val editItemTouchHelper = ItemTouchHelper(editSwipeHandler)
         editItemTouchHelper.attachToRecyclerView(rvHappyPlacesList)
+
+        val deleteSwipeHandler = object : SwipeToDeleteCallback(this){
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter = rvHappyPlacesList.adapter as HappyPlacesAdapter
+                adapter.removeAt(viewHolder.adapterPosition)
+                getHappyPlacesListFromLocalDB()
+            }
+        }
+
+        val deleteItemTouchHelper = ItemTouchHelper(deleteSwipeHandler)
+        deleteItemTouchHelper.attachToRecyclerView(rvHappyPlacesList)
     }
 
     private fun getHappyPlacesListFromLocalDB() {
