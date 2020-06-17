@@ -35,6 +35,7 @@ import kotlinx.android.synthetic.main.activity_add_happy_place.*
 import pl.krusiec.happyplaces.R
 import pl.krusiec.happyplaces.database.DatabaseHandler
 import pl.krusiec.happyplaces.models.HappyPlaceModel
+import pl.krusiec.happyplaces.utils.GetAddressFromLatLng
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -133,6 +134,18 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
             Log.i("Current Latitude", "$latitude")
             longitude = lastLocation.longitude
             Log.i("Current Longitude", "$longitude")
+
+            val addressTask = GetAddressFromLatLng(this@AddHappyPlaceActivity, latitude, longitude)
+            addressTask.setAddressListener(object: GetAddressFromLatLng.AddressListener{
+                override fun onAddressFound(address: String?) {
+                    et_location.setText(address)
+                }
+
+                override fun onError() {
+                    Log.e("Get Address:: ", "Something went wrong")
+                }
+            })
+            addressTask.getAddress()
         }
     }
 
